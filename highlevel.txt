@@ -1,0 +1,14 @@
+`lam a b c. ...`
+`let a = e1 in e2` => `(lam a. e2) (e1)`
+`let rec f = e1 in e2` => `let f = Y (lam f. e1) in e2`
+
+
+- [ ] [BinNat](https://coq.inria.fr/library/Coq.NArith.BinNat.html)
+- [ ] [BinNatDef](https://coq.inria.fr/library/Coq.NArith.BinNatDef.html#)
+- [ ] [Positive](https://coq.inria.fr/library/Coq.Numbers.BinNums.html#)
+    - [ ] `N := 0 | P` `P:= 1 | .0 | .1`
+    - [ ] [mod](https://en.wikipedia.org/wiki/Modulo_operation)
+        - [ ] http://homepage.cs.uiowa.edu/~dwjones/bcd/mod.shtml
+    - [ ] sub/pred
+    - [ ] eq/sub
+- [ ] [BinPos](https://coq.inria.fr/library/Coq.PArith.BinPos.html#add)

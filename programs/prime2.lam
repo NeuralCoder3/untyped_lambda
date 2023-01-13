@@ -1,0 +1,80 @@
+let id = λ x. x in
+
+(* datatypes *)
+(* TODO: Improve *)
+let O = λ zero. λ succ. zero in
+let S = λ n. λ zero. λ succ. succ (n zero succ) in
+let 1 = S O in
+let 2 = S 1 in
+
+(* or list = bool*(bool|x*list) *)
+let nil = λ nil. λ cons. nil in
+(* TODO *)
+let cons = λ x. λ xs. λ nil. λ cons. cons x (xs nil cons) in
+let hd = λ xs. xs id (λ h. λ t. h) in
+(* TODO: check *)
+let tl = λ xs. λ nil. λ cons. xs (λf. nil) (λ h. λ t. λ f. f h (t cons)) (λ h. λ t. cons) in
+
+
+(* combinator *)
+let fix = λ f. (λ x. f (x x)) (λ x. f (x x)) in
+
+(* bool *)
+let true = λ x. λ y. x in
+let false = λ x. λ y. y in
+let ite = λ b. λ x. λ y. b x y in
+let and = λ a. λ b. ite a b false in
+
+(* arith *)
+(* TODO: Improve *)
+let is_O = λ n. n true (λ x. false) in
+(* TODO: check *)
+let pred = λ n. λ zero. λ succ. n (λ x. zero) (λ x. x zero succ) in
+let sub = λ x. λ y. y x pred in
+let leq = λ x. λ y. is_O (sub x y) in
+let eq = λ x. λ y. and (leq x y) (leq y x) in
+let lt = λ x. λ y. leq (S x) y in
+let mod = fix (λ mod. λ n. λ d.
+  ite (lt n d)
+    n
+    (mod (sub n d) d)
+  )
+in
+
+(* list *)
+let is_nil
+let length = fix (λ length. λ xs. 
+  ite (is_nil xs)
+    O
+    (S (length (tl xs)))
+  )
+in
+let take = fix (λ take. λ xs. λ n. 
+  ite (eq n O)
+    nil
+    (
+      ite (is_nil xs)
+        nil
+        (cons (hd xs) (take (tl xs) (pred n)))
+    )
+  )
+in
+let filter = fix (λ filter. λ f. λ xs.
+  ite (is_nil xs) 
+    nil
+    (
+      ite (f (hd xs))
+        (cons (hd xs) (filter f (tl xs)))
+        (filter f (tl xs))
+    )
+  )
+in
+
+
+(* prime *)
+let nats = fix (λ nats. cons n (nats (S n))) in
+let ℕ₊ = nats 1 in
+let divides = λ n x. is_O (mod n d) in
+let is_prime = λ n. eq (length (filter (divides n) (take ℕ₊ n))) 2 in
+let primes = filter is_prime ℕ₊ in
+get primes 2
