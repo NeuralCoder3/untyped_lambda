@@ -42,7 +42,7 @@ let _I = App (App (_S, _K), _K)
 
 let rec to_ski e  = 
   match e with
-  | Lam (x, App (y, Var z)) when z = x -> to_ski y
+  | Lam (x, App (y, Var z)) when z = x && not(contains x y) -> to_ski y
   | Lam (x, b) ->
     let b' = to_ski b in
     (* if b' = Var x then _I else App (K, b') *)
